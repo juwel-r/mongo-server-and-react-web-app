@@ -1,3 +1,6 @@
+*{
+  margin: 0;
+}
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -68,17 +71,23 @@ button:focus-visible {
 }
 
 form{
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  border: 1px solid;
+  margin:20px auto;
+  padding: 12px;
   max-width: 80%;
-  margin: 0 auto;
-  border: 2px solid gainsboro;
-  padding: 13px;
-  border-radius: 12px;
-  background-color: gray;
+background-color:#213547;
 }
-input{
-  height: 50px;
-  background: rgb(255, 255, 255);color: black;
+
+table {
+  border: 1px solid;
+  border-collapse: collapse;
+  margin: 12px;
+}
+th,
+td {
+  border: 1px solid;
+  padding: 4px;
+}
+button {
+  margin: 0 5px;
 }

@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -37,16 +37,53 @@ async function run() {
 
     const database = client.db("userDB");
     const userData = database.collection("userInfo");
+
+    // get data
+    app.get("/user", async (req, res) => {
+      const cursor = userData.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    //get single data
+    app.get("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const user = await userData.findOne(query);
+      res.send(user);
+    });
+
+    //create data
     app.post("/user", async (req, res) => {
       const newUser = req.body;
       const result = await userData.insertOne(newUser);
       res.send(result);
-      console.log(
-        `successfully inserted ${result} - data - ${result.insertedCount} - ID ${result.insertedId}`
-      );
-      console.log(
-        `${result.insertedCount} documents were inserted with the _id: ${result.insertedId}`,
-      );
+    });
+
+    //Update data
+    app.put("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedData = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedUserData = {
+        $set: {
+          name: updatedData.name,
+          email: updatedData.email,
+        },
+      };
+      const result = await userData.updateOne(filter, updatedUserData, options);
+      res.send(result)
+      // console.log(result);
+    });
+
+    // delete data
+    app.delete("/user/:id", async (req, res) => {
+      const currentId = req.params.id;
+      const query = { _id: new ObjectId(currentId) };
+      const result = await userData.deleteOne(query);
+      res.send(result);
+      // console.log(currentId)
     });
 
     // Send a ping to confirm a successful connection
